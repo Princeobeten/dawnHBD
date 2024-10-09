@@ -30,39 +30,39 @@
             z-index: 1;
         }
         .content {
-        position: relative;
-        z-index: 2;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
 
-    .image-container {
-        position: relative;
-        width: 250px; /* Set a specific width */
-        height: 250px; /* Set a specific height */
-        margin-bottom: 20px;
-    }
+        .image-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin-bottom: 20px;
+        }
 
-    .birthday-image {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 15px;
-        border: 5px solid #ff69b4;
-        box-shadow: 0 0 20px rgba(255, 105, 180, 0.7);
-        opacity: 0;
-        transition: opacity 1s ease-in-out;
-    }
+        .birthday-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 5px solid #ff69b4;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.7);
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
 
-    .birthday-image.active {
-        opacity: 1;
-    }
+        .birthday-image.active {
+            opacity: 1;
+        }
 
         .birthday-message {
             font-size: 3em;
@@ -95,37 +95,57 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
         }
+
         .loader-container {
             position: relative;
             width: 100px;
             height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .loader {
-            width: 100%;
-            height: 100%;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #ff69b4;
+
+        /* Circular loader */
+        .circular-loader {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            animation: spin 1s linear infinite, colorful 5s linear infinite;
+            border: 10px solid rgba(255, 105, 180, 0.3);
+            border-top: 10px solid #ff69b4;
+            animation: spin 2s linear infinite;
         }
-        .loader-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.2em;
-            font-weight: bold;
-        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        @keyframes colorful {
-            0% { border-top-color: #ff69b4; }
-            33% { border-top-color: #ff9933; }
-            66% { border-top-color: #66ff66; }
-            100% { border-top-color: #ff69b4; }
+
+        .loader-text {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff69b4;
+            position: absolute;
         }
+
+        /* View Button Style */
+        .view-button {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #ff69b4;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .view-button:hover {
+            background-color: hsl(330, 100%, 81%);
+        }
+
+        /* Responsive adjustments */
         @media (max-width: 600px) {
             .birthday-message {
                 font-size: 1.5em;
@@ -133,12 +153,9 @@
             .emoji-container {
                 font-size: 2em;
             }
-            .loader-container {
-                width: 60px;
-                height: 60px;
-            }
-            .loader-text {
-                font-size: 0.8em;
+            .image-container {
+                width: 150px;
+                height: 150px;
             }
         }
     </style>
@@ -148,12 +165,14 @@
         <div id="particles-js"></div>
         <div class="content">
             <div class="loader-container">
-                <div class="loader"></div>
-                <div class="loader-text">Dawn</div>
+                <div class="circular-loader"></div>
+                <div class="loader-text" id="loader-percentage">0%</div>
             </div>
+            <button id="view-button" class="view-button">Dawn</button>
         </div>
     </div>
-    <div id="birthday-screen" class="screen">
+
+    <div id="birthday-screen" class="screen" style="display:none; opacity:0;">
         <div class="content">
             <div class="image-container">
                 <img src="dawn.jpg" alt="Dawn" class="birthday-image active">
@@ -161,7 +180,10 @@
                 <img src="dawn3.jpg" alt="Dawn" class="birthday-image">
             </div>
             <div class="birthday-message">Happy Birthday Dev Dawn!</div>
-            <p>Official no longer an under age</p>
+            
+            <p style="font-size: 1.2em; color: #ff9933;">Wishing you a year full of joy, growth, and endless opportunities! Keep shining, Dawn! 🎉</p>
+            
+            <p>Officially no longer underage</p>
             <div class="emoji-container">
                 <span class="emoji">🎉</span>
                 <span class="emoji">🎂</span>
@@ -169,6 +191,12 @@
             </div>
         </div>
     </div>
+
+    <!-- Background Birthday Song -->
+    <audio id="birthday-song" loop>
+        <source src="happy-birthday-240348.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script>
@@ -183,31 +211,50 @@
             }
         });
 
-        setTimeout(() => {
+        document.addEventListener('DOMContentLoaded', () => {
+            const loaderPercentage = document.getElementById('loader-percentage');
+            const viewButton = document.getElementById('view-button');
             const launchScreen = document.getElementById('launch-screen');
             const birthdayScreen = document.getElementById('birthday-screen');
-            
-            launchScreen.style.opacity = '0';
-            birthdayScreen.style.display = 'flex';
-            
-            setTimeout(() => {
-                launchScreen.style.display = 'none';
-                birthdayScreen.style.opacity = '1';
-                birthdayScreen.style.transform = 'scale(1)';
-            }, 500);
-        }, 3000);
+            const birthdaySong = document.getElementById('birthday-song');
+            const circularLoader = document.querySelector('.circular-loader');
+    
+            let percentage = 0;
+            const interval = setInterval(() => {
+                if (percentage < 100) {
+                    percentage++;
+                    loaderPercentage.textContent = `${percentage}%`;
+                } else {
+                    clearInterval(interval);
+                    loaderPercentage.style.display = 'none';
+                    circularLoader.style.display = 'none'; // Hide circular loader
+                    viewButton.style.display = 'inline-block';
+                }
+            }, 50); // Adjust speed as necessary (50ms interval gives a 5-second load time)
+    
+            viewButton.addEventListener('click', () => {
+                launchScreen.style.opacity = '0';
+    
+                setTimeout(() => {
+                    launchScreen.style.display = 'none';
+                    birthdayScreen.style.display = 'flex';
+                    birthdayScreen.style.opacity = '1';
+                    birthdaySong.play(); // Play song when transitioning to the birthday screen
+                }, 500);
+            });
 
-        // Image slideshow (fade in and out)
-        const images = document.querySelectorAll('.birthday-image');
-        let currentImage = 0;
-
-        function changeImage() {
-            images[currentImage].classList.remove('active');
-            currentImage = (currentImage + 1) % images.length;
-            images[currentImage].classList.add('active');
-        }
-
-        setInterval(changeImage, 5000);
+            // Image slideshow (fade in and out)
+            const images = document.querySelectorAll('.birthday-image');
+            let currentImage = 0;
+    
+            function changeImage() {
+                images[currentImage].classList.remove('active');
+                currentImage = (currentImage + 1) % images.length;
+                images[currentImage].classList.add('active');
+            }
+    
+            setInterval(changeImage, 4000);
+        });
     </script>
 </body>
 </html>
